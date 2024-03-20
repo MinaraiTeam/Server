@@ -3,6 +3,7 @@ const multer = require('multer');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const mysql = require('mysql');
 
 const app = express()
 const port = process.env.PORT || 8888
@@ -18,7 +19,9 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
 
-
+//////////////
+//  SERVER  //
+//////////////
 const httpServer = app.listen(port, async () => {
   console.log(`Listening for HTTP queries on: http://localhost:${port}`)
 })
@@ -31,6 +34,21 @@ function shutDown() {
   httpServer.close()
   process.exit(0);
 }
+
+/////////////
+//  MySQL  //
+/////////////
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "admin",
+  database: "mnt_db"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected to MySQL!");
+});
 
 
 ///////////////////
@@ -56,9 +74,28 @@ app.post('/data', upload.single('file'), async (req, res) => {
 ///  FUNCTIONS  ///
 ///////////////////
 
-// functions here
+function executeQuery(query, callback) {
+  con.query(query, function (err, result, fields) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      callback(err, null);
+    } else {
+      callback(null, result);
+    }
+  });
+}
 
-
+// example
+// function getAllArticles() {
+//   const query = "SELECT * FROM articles";
+//   executeQuery(query, (err, result) => {
+//     if (err) {
+//       writeError('Error getting articles: ' + err.message);
+//     } else {
+//       console.log('Articles:', result);
+//     }
+//   });
+// }
 
 ///////////////
 ///  LOGGS  ///
