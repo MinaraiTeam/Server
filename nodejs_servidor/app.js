@@ -55,16 +55,59 @@ con.connect(function(err) {
 ///  ENDPOINTS  ///
 ///////////////////
 
-app.post('/data', upload.single('file'), async (req, res) => {
-  writeLog('MESSAGE')
+app.post('/api/user/register', upload.single('file'), async (req, res) => {
+  writeLog('MESSAGE register')
   const textPost = req.body;
 
   try {
-    // take data
+    userName = textPost.name;
+    userPassword = textPost.password;
+    userProfileImage = textPost.profileImage;
+    userRole = textPost.role;
   } catch (error) {
     writeError('JSON error' + error);
     res.status(400).send('{status:"EROR", message:"Error en el JSON"}')
-  }
+  } 
+
+  var query = "INSERT INTO users (name, password, profile_image, role) VALUES (?, ?, ?, ?)"
+
+  con.query(query, [userName, userPassword, userProfileImage, userRole], function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{status:"EROR", message:"Error executing query"}')
+    } else {
+      res.status(200).send('{status:"OK", message:"User registered", data:{}')
+    }
+  });
+
+})
+
+app.post('/api/user/login', upload.single('file'), async (req, res) => {
+  writeLog('MESSAGE login')
+  const textPost = req.body;
+
+  try {
+    userName = textPost.name;
+    userPassword = textPost.password;
+  } catch (error) {
+    writeError('JSON error' + error);
+    res.status(400).send('{status:"EROR", message:"Error en el JSON"}')
+  } 
+
+  var query = "Select name, password from users where name = ? and password = ?"
+
+  con.query(query, [userName, userPassword], function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{status:"EROR", message:"Error executing query"}')
+    } else {
+      if (result.length > 0) {
+        res.status(200).send('{status:"OK", message:"User login ok", data:{}')
+      } else {
+        res.status(400).send('{status:"EROR", message:"Invalid username or password"}')
+      }
+    }
+  });
 
 })
 
@@ -104,7 +147,7 @@ function executeQuery(query, callback) {
 function writeLog(message) {
   message = '>> ' + message
   console.log(message)
-  const logFilePath = path.join(__dirname, 'logs.txt'); // Ruta del archivo de logs
+  const logFilePath = path.join(__dirname, 'logs.txt'); 
 
   // Agregar la fecha y hora actual al mensaje de log
   const timestamp = new Date().toISOString();
@@ -121,7 +164,7 @@ function writeLog(message) {
 function writeError(errorMessage) {
   errorMessage = '>>> [ERROR] ' + errorMessage
   console.log(errorMessage)
-  const logFilePath = path.join(__dirname, 'logs.txt'); // Ruta del archivo de logs
+  const logFilePath = path.join(__dirname, 'logs.txt'); 
 
   // Agregar la fecha y hora actual al mensaje de log
   const timestamp = new Date().toISOString();
