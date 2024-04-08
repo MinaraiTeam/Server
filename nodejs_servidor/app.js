@@ -56,7 +56,7 @@ con.connect(function(err) {
 ///////////////////
 
 app.post('/api/user/register', upload.single('file'), async (req, res) => {
-  writeLog('MESSAGE register')
+  writeLog('MESSAGE user register')
   const textPost = req.body;
 
   try {
@@ -83,7 +83,7 @@ app.post('/api/user/register', upload.single('file'), async (req, res) => {
 })
 
 app.post('/api/user/login', upload.single('file'), async (req, res) => {
-  writeLog('MESSAGE login')
+  writeLog('MESSAGE user login')
   const textPost = req.body;
 
   try {
@@ -94,7 +94,7 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
     res.status(400).send('{status:"EROR", message:"Error en el JSON"}')
   } 
 
-  var query = "Select name, password from users where name = ? and password = ?"
+  var query = "SELECT name, password FROM users WHERE name = ? and password = ?"
 
   con.query(query, [userName, userPassword], function (err, result) {
     if (err) {
@@ -110,6 +110,83 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
   });
 
 })
+
+app.post('/api/article/list', upload.single('file'), async (req, res) => {
+  writeLog('MESSAGE article list');
+  const textPost = req.body;
+
+  var params = [];
+  var vars = ['LANGUAGE', 'COUNTRY', 'DATE'];
+
+  try {
+    categoryName = textPost.category;
+    userName = textPost.user;
+    amount = textPost.amount;
+    params.push(textPost.language);
+    params.push(textPost.country);
+    params.push(textPost.date);
+    orderBy = textPost.orderBy;
+    order = textPost.order;
+  } catch (error) {
+    writeError('JSON error' + error);
+    res.status(400).send('{status:"ERROR", message:"Error en el JSON"}');
+    return;
+  }
+
+  var query = "SELECT * FROM Articles WHERE ";
+  var conditionsAdded = false;
+  var uses = [];
+
+  if (categoryName !== "*") {
+    query += " category_id = (SELECT category_id from categories where name = ?)";
+    uses.push(categoryName);
+    conditionsAdded = true;
+    if (userName !== "*") {
+      query += " AND ";
+    }
+  }
+
+  if (userName !== "*") {
+    query += " user_id = (SELECT user_id from users where name = ?) ";
+    uses.push(userName);
+    conditionsAdded = true;
+  }
+
+  for (var i = 0; i < params.length; i++) {
+    if (params[i].toString() !== "*") {
+      if (conditionsAdded) {
+        query += " AND ";
+      }
+      query += ` ${vars[i]} = ?`;
+      uses.push(params);
+      conditionsAdded = true;
+    }
+  }
+
+  var orderByClause = ' ORDER BY ? ?';
+  uses.push(orderBy);
+  uses.push(order);
+  query += orderByClause;
+
+
+  if (amount < 0) {
+    query += " LIMIT ?";
+    uses.push(amount);
+  }
+
+  con.query(query, uses, function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{status:"ERROR", message:"Error executing query"}');
+    } else {
+      if (result.length > 0) {
+        res.status(200).send(`{status:"OK", message:"Query ok", data:${JSON.stringify(result)}}`);
+      } else {
+        res.status(400).send('{status:"ERROR", message:"Something gone wrong"}');
+      }
+    }
+  });
+});
 
 
 
