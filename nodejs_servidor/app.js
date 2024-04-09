@@ -66,7 +66,7 @@ app.post('/api/user/register', upload.single('file'), async (req, res) => {
     userRole = textPost.role;
   } catch (error) {
     writeError('JSON error' + error);
-    res.status(400).send('{status:"EROR", message:"Error en el JSON"}')
+    res.status(400).send('{"status":"EROR", "message":"Error en el JSON"}')
   } 
 
   var query = "INSERT INTO users (name, password, profile_image, role) VALUES (?, ?, ?, ?)"
@@ -74,9 +74,9 @@ app.post('/api/user/register', upload.single('file'), async (req, res) => {
   con.query(query, [userName, userPassword, userProfileImage, userRole], function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
-      res.status(400).send('{status:"EROR", message:"Error executing query"}')
+      res.status(400).send('{"status":"EROR", "message":"Error executing query"}')
     } else {
-      res.status(200).send('{status:"OK", message:"User registered", data:{}')
+      res.status(200).send('{"status":"OK", "message":"User registered", "data":{}')
     }
   });
 
@@ -91,7 +91,7 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
     userPassword = textPost.password;
   } catch (error) {
     writeError('JSON error' + error);
-    res.status(400).send('{status:"EROR", message:"Error en el JSON"}')
+    res.status(400).send('{"status":"EROR", "message":"Error en el JSON"}')
   } 
 
   var query = "SELECT name, password FROM users WHERE name = ? and password = ?"
@@ -99,12 +99,12 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
   con.query(query, [userName, userPassword], function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
-      res.status(400).send('{status:"EROR", message:"Error executing query"}')
+      res.status(400).send('{"status":"EROR", "message":"Error executing query"}')
     } else {
       if (result.length > 0) {
-        res.status(200).send('{status:"OK", message:"User login ok", data:{}')
+        res.status(200).send('{"status":"OK", "message":"User login ok", "data":{}')
       } else {
-        res.status(400).send('{status:"EROR", message:"Invalid username or password"}')
+        res.status(400).send('{"status":"EROR", "message":"Invalid username or password"}')
       }
     }
   });
@@ -129,7 +129,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
     order = textPost.order;
   } catch (error) {
     writeError('JSON error' + error);
-    res.status(400).send('{status:"ERROR", message:"Error en el JSON"}');
+    res.status(400).send('{"status":"ERROR", "message":"Error en el JSON"}');
     return;
   }
 
@@ -158,7 +158,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
         query += " AND ";
       }
       query += ` ${vars[i]} = ?`;
-      uses.push(params);
+      uses.push(params[i].toString());
       conditionsAdded = true;
     }
   }
@@ -177,12 +177,12 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
   con.query(query, uses, function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
-      res.status(400).send('{status:"ERROR", message:"Error executing query"}');
+      res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
     } else {
       if (result.length > 0) {
-        res.status(200).send(`{status:"OK", message:"Query ok", data:${JSON.stringify(result)}}`);
+        res.status(200).send(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
       } else {
-        res.status(400).send('{status:"ERROR", message:"Something gone wrong"}');
+        res.status(401).send('{"status":"ERROR", "message":"Something gone wrong"}');
       }
     }
   });
@@ -196,7 +196,7 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
     article_id = textPost.article_id;
   } catch (error) {
     writeError('JSON error' + error);
-    res.status(400).send('{status:"ERROR", message:"Error en el JSON"}');
+    res.status(400).send('{"status":"ERROR", "message":"Error en el JSON"}');
     return;
   }
 
@@ -206,12 +206,12 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
   con.query(query, [article_id], function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
-      res.status(400).send('{status:"ERROR", message:"Error executing query"}');
+      res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
     } else {
       if (result.length > 0) {
-        res.status(200).send(`{status:"OK", message:"Query ok", data:${JSON.stringify(result)}}`);
+        res.status(200).send(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
       } else {
-        res.status(400).send('{status:"ERROR", message:"Something gone wrong"}');
+        res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
       }
     }
   });
