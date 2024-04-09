@@ -188,6 +188,35 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
   });
 });
 
+app.post('/api/article/get', upload.single('file'), async (req, res) => {
+  writeLog('MESSAGE article get');
+  const textPost = req.body;
+
+  try {
+    article_id = textPost.article_id;
+  } catch (error) {
+    writeError('JSON error' + error);
+    res.status(400).send('{status:"ERROR", message:"Error en el JSON"}');
+    return;
+  }
+
+  var query = "SELECT * FROM Articles WHERE article_id = ?";
+  
+
+  con.query(query, [article_id], function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{status:"ERROR", message:"Error executing query"}');
+    } else {
+      if (result.length > 0) {
+        res.status(200).send(`{status:"OK", message:"Query ok", data:${JSON.stringify(result)}}`);
+      } else {
+        res.status(400).send('{status:"ERROR", message:"Something gone wrong"}');
+      }
+    }
+  });
+});
+
 
 
 ///////////////////
