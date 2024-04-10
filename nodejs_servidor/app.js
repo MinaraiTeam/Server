@@ -6,7 +6,7 @@ const path = require('path');
 const mysql = require('mysql');
 
 const app = express()
-const port = process.env.PORT || 8888
+const port = process.env.PORT || 80
 
 const storage = multer.memoryStorage();
 const upload = multer({
