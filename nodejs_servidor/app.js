@@ -41,7 +41,7 @@ function shutDown() {
 const con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "adminadmin",
+  password: "Admin_123",
   database: "minarai_db"
 });
 
