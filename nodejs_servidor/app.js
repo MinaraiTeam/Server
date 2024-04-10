@@ -133,7 +133,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
     return;
   }
 
-  var query = "SELECT * FROM Articles WHERE ";
+  var query = "SELECT * FROM articles WHERE ";
   var conditionsAdded = false;
   var uses = [];
 
@@ -200,7 +200,7 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
     return;
   }
 
-  var query = "SELECT * FROM Articles WHERE article_id = ?";
+  var query = "SELECT * FROM articles WHERE article_id = ?";
   
 
   con.query(query, [article_id], function (err, result) {
