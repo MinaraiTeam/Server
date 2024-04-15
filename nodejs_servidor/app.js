@@ -139,7 +139,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
 
   if (categoryName !== "*") {
     query += " category_id = (SELECT category_id from categories where name = ?)";
-    uses.push(categoryName);
+    uses.push(parseInt(categoryName));
     conditionsAdded = true;
     if (userName !== "*") {
       query += " AND ";
