@@ -45,10 +45,10 @@ const con = mysql.createConnection({
   database: "minarai_db"
 });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected to MySQL!");
-});
+// con.connect(function(err) {
+//   if (err) throw err;
+//   console.log("Connected to MySQL!");
+// });
 
 
 ///////////////////
@@ -174,8 +174,6 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
     uses.push(amount);
   }
 
-  console.log(query);
-  console.log(uses);
   con.query(query, uses, function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
@@ -228,6 +226,36 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
 ///////////////////
 ///  FUNCTIONS  ///
 ///////////////////
+
+function saveImage(imageData, imageName) {
+  const directory = './images/'
+
+  if (!fs.existsSync(directory)){
+    fs.mkdirSync(directory);
+  }
+
+
+    // Create a buffer from the Base64 data
+    const buffer = Buffer.from(imageData, 'base64');
+
+  fs.writeFile(directory + imageName, buffer, function(err) {
+    if (err) {
+        console.error('Error saving image:', err);
+    } else {
+        console.log('Image saved successfully!');
+    }
+  });
+}
+
+function imageToBase64(filePath) {
+  // Read the image file
+  const imageData = fs.readFileSync(filePath);
+
+  // Convert the image data to base64
+  const base64Image = Buffer.from(imageData).toString('base64');
+
+  return base64Image;
+}
 
 function executeQuery(query, callback) {
   con.query(query, function (err, result, fields) {
