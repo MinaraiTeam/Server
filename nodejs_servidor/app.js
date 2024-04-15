@@ -185,6 +185,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
         console.log(result);
         res.status(200).send(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
       } else {
+        console.log(err);
         res.status(401).send('{"status":"ERROR", "message":"Something gone wrong"}');
       }
     }
