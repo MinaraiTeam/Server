@@ -182,7 +182,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
       res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
     } else {
       if (result.length > 0) {
-        console.log(result);
+        console.log(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
         res.status(200).send(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
       } else {
         console.log(err);
