@@ -228,7 +228,7 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
 ///////////////////
 
 function saveImage(imageData, imageName) {
-  const directory = './images/'
+  const directory = './public/images/'
 
   if (!fs.existsSync(directory)){
     fs.mkdirSync(directory);
