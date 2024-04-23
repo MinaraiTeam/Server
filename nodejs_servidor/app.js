@@ -45,10 +45,10 @@ const con = mysql.createConnection({
   database: "minarai_db"
 });
 
-// con.connect(function(err) {
-//   if (err) throw err;
-//   console.log("Connected to MySQL!");
-// });
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected to MySQL!");
+});
 
 
 ///////////////////
@@ -192,7 +192,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
   });
 });
 
-app.post('/api/article/get', upload.single('file'), async (req, res) => {
+app.post('/api/article/sumview', upload.single('file'), async (req, res) => {
   writeLog('MESSAGE article get');
   const textPost = req.body;
 
@@ -204,7 +204,7 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
     return;
   }
 
-  var query = "SELECT * FROM articles WHERE article_id = ?";
+  var query = "UPDATE articles  SET views = views + 1  WHERE article_id = ?";
   
 
   con.query(query, [article_id], function (err, result) {
@@ -213,7 +213,7 @@ app.post('/api/article/get', upload.single('file'), async (req, res) => {
       res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
     } else {
       if (result.length > 0) {
-        res.status(200).send(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
+        res.status(200).send(`{"status":"OK", "message":"View Counted"}`);
       } else {
         res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
       }
