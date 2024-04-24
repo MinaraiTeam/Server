@@ -253,7 +253,7 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     }
   }
 
-  userId = await getUserId(user);
+  userId = getUserId(user);
 
   var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
   
@@ -298,16 +298,6 @@ function saveImage(imageData, imageName) {
   });
 }
 
-function imageToBase64(filePath) {
-  // Read the image file
-  const imageData = fs.readFileSync(filePath);
-
-  // Convert the image data to base64
-  const base64Image = Buffer.from(imageData).toString('base64');
-
-  return base64Image;
-}
-
 function uuid() {
   return uuidv4() + '.png';
 }
@@ -329,19 +319,7 @@ function isBase64Image(str) {
   return false;
 }
 
-function executeQuery(query, callback) {
-  con.query(query, function (err, result, fields) {
-    if (err) {
-      writeError('Error executing query: ' + err);
-      callback(err, null);
-    } else {
-      callback(null, result);
-    }
-  });
-}
-
-
-async function getUserId(user) {
+function getUserId(user) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
   con.query(query, [user], function (err, result) {
       if (err) {
