@@ -345,7 +345,7 @@ function executeQuery(query, callback) {
 
 async function getUserId(user) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
-  con.query(query, params, function (err, result) {
+  con.query(query, [user], function (err, result) {
       if (err) {
         writeError('Error executing query: ' + err);
       } else {
