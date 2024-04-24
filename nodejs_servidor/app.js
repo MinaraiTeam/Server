@@ -241,6 +241,7 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     res.status(400).send('{"status":"ERROR", "message":"Error en el JSON"}');
     return;
   }
+  console.log(content)
 
   previewImage = saveImage(preview_image, uuid());
 
