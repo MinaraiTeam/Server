@@ -226,6 +226,8 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
   writeLog('MESSAGE article post');
   const textPost = req.body;
 
+  console.log(textPost)
+
   if (!Array.isArray(textPost.content)) {
     res.status(400).send('{"status":"ERROR", "message":"Content must be an array"}');
     return;
