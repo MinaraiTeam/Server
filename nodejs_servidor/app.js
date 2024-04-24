@@ -347,8 +347,9 @@ function executeQuery(query, callback) {
 async function getUserId(user) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
   try {
-    const result = await executeQuery(query, [user]);
-    console.log(result)
+    const result = await executeQuery(query, [user]).then(
+      console.log(result)
+    )
     //return result[0].user_id;
   } catch (err) {
     writeError('Error getting userId:'+ err.message);
