@@ -226,10 +226,15 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
   writeLog('MESSAGE article post');
   const textPost = req.body;
 
+  if (!Array.isArray(textPost.content)) {
+    res.status(400).send('{"status":"ERROR", "message":"Content must be an array"}');
+    return;
+  }
+
   try {
     title = textPost.title;
     preview_image = textPost.preview_image;
-    content = textPost.content;
+    const content = textPost.content;
     language = textPost.language;
     annex = textPost.annex;
     country = textPost.country;
@@ -260,9 +265,9 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
       return;
     }
 
-    var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
+    var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?);"
   
-    const params = [title, previewImage, savedContent, language, annex, country, date, userId, category];
+    const params = [title, previewImage, JSON.stringify({ content: savedContent }),  language, annex, country, date, userId, category];
 
     console.log(query)
     console.log(params)
