@@ -255,22 +255,24 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
 
   userId = await getUserId(user);
 
-  var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
-  
-  params = [title, previewImage, savedContent, language, annex, country, date, userid, category]
+  console.log(userId)
 
-  con.query(query, params, function (err, result) {
-    if (err) {
-      writeError('Error executing query: ' + err);
-      res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
-    } else {
-      if (result.length > 0) {
-        res.status(200).send(`{"status":"OK", "message":"Article created"}`);
-      } else {
-        res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
-      }
-    }
-  });
+  // var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
+  
+  // params = [title, previewImage, savedContent, language, annex, country, date, userid, category]
+
+  // con.query(query, params, function (err, result) {
+  //   if (err) {
+  //     writeError('Error executing query: ' + err);
+  //     res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
+  //   } else {
+  //     if (result.length > 0) {
+  //       res.status(200).send(`{"status":"OK", "message":"Article created"}`);
+  //     } else {
+  //       res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
+  //     }
+  //   }
+  // });
 });
 
 
@@ -346,7 +348,8 @@ async function getUserId(user) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
   try {
     const result = await executeQuery(query, [user]);
-    return result[0].user_id;
+    console.log(result)
+    //return result[0].user_id;
   } catch (err) {
     writeError('Error getting userId:'+ err.message);
   }
