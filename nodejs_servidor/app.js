@@ -350,7 +350,7 @@ async function getUserId(user) {
         writeError('Error executing query: ' + err);
       } else {
         if (result.length > 0) {
-          console.log(result)
+          console.log(result[0].user_id)
         } else {
           writeError("Query ERROR")
         }
