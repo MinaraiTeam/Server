@@ -354,7 +354,6 @@ async function getUserId(user) {
   }
 }
 
-console.log(getUserId('Test Subject'))
 
 ///////////////
 ///  LOGGS  ///
