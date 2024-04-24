@@ -242,20 +242,20 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     return;
   }
 
-  previewImage = saveImage(preview_image, uuid());
+  // previewImage = saveImage(preview_image, uuid());
 
-  savedContent = []
-  for (let i = 0; i < content.length; i++) {
-    if (isBase64Image(content[i])) {
-      savedContent.push(saveImage(content[i], uuid()))
-    } else {
-      savedContent.push(content[i])
-    }
-  }
+  // savedContent = []
+  // for (let i = 0; i < content.length; i++) {
+  //   if (isBase64Image(content[i])) {
+  //     savedContent.push(saveImage(content[i], uuid()))
+  //   } else {
+  //     savedContent.push(content[i])
+  //   }
+  // }
 
   userId = await getUserId(user);
 
-  // console.log(userId)
+  console.log(userId)
 
   // var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
   
@@ -293,9 +293,8 @@ function saveImage(imageData, imageName) {
 
   fs.writeFile(directory + imageName, buffer, function(err) {
     if (err) {
-        console.error('Error saving image:', err);
+        writeError('Error saving image:', err);
     } else {
-        console.log('Image saved successfully!');
         return '/images/' + imageName
     }
   });
@@ -351,7 +350,7 @@ async function getUserId(user) {
         writeError('Error executing query: ' + err);
       } else {
         if (result.length > 0) {
-          console.log(result[0].user_id)
+          console.log(result)
         } else {
           writeError("Query ERROR")
         }
