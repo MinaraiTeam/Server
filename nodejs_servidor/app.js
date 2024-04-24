@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express()
 const port = process.env.PORT || 80
@@ -309,10 +310,7 @@ function imageToBase64(filePath) {
 }
 
 function uuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x'? r : (r & 0x3 | 0x8);
-    return v.toString(16) + '.png';
-  });
+  return uuidv4() + '.png';
 }
 
 function isBase64Image(str) {
