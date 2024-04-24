@@ -105,7 +105,7 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
       if (result.length > 0) {
         res.status(200).send('{"status":"OK", "message":"User login ok", "data":{}')
         result.map(val => {
-          console.log(val.RowDataPacket);
+          console.log(val[0].name);
       });
       } else {
         res.status(400).send('{"status":"EROR", "message":"Invalid username or password"}')
