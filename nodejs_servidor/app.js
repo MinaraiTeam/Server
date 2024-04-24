@@ -357,13 +357,6 @@ async function getUserId(user) {
         }
       }
     });
-  try {
-    const result = await executeQuery(query, [user]);
-    console.log(result)
-    //return result[0].user_id;
-  } catch (err) {
-    writeError('Error getting userId:'+ err.message);
-  }
 }
 
 
