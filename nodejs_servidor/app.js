@@ -262,6 +262,9 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
   
     const params = [title, previewImage, savedContent, language, annex, country, date, userId, category];
+
+    console.log(query)
+    console.log(params)
     
     con.query(query, params, (err, result) => {
       if (err) {
