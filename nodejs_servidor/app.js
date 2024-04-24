@@ -255,7 +255,7 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
 
   userId = await getUserId(user);
 
-  console.log(userId)
+  // console.log(userId)
 
   // var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
   
@@ -346,10 +346,20 @@ function executeQuery(query, callback) {
 
 async function getUserId(user) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
+  con.query(query, params, function (err, result) {
+      if (err) {
+        writeError('Error executing query: ' + err);
+      } else {
+        if (result.length > 0) {
+          console.log(result[0].user_id)
+        } else {
+          writeError("Query ERROR")
+        }
+      }
+    });
   try {
-    const result = await executeQuery(query, [user]).then(
-      console.log(result)
-    )
+    const result = await executeQuery(query, [user]);
+    console.log(result)
     //return result[0].user_id;
   } catch (err) {
     writeError('Error getting userId:'+ err.message);
