@@ -253,23 +253,24 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     }
   }
 
-  userId = await getUserId(user);
-
-  var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
-  
-  params = [title, previewImage, savedContent, language, annex, country, date, userid, category]
-
-  con.query(query, params, function (err, result) {
-    if (err) {
-      writeError('Error executing query: ' + err);
-      res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
-    } else {
-      if (result.length > 0) {
-        res.status(200).send(`{"status":"OK", "message":"Article created"}`);
-      } else {
-        res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
-      }
+  getUserId(user, (userId) => {
+    if (userId === null) {
+      res.status(400).send('{"status":"ERROR", "message":"User not found or query error"}');
+      return;
     }
+
+    var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
+  
+    const params = [title, previewImage, savedContent, language, annex, country, date, userId, category];
+    
+    con.query(query, params, (err, result) => {
+      if (err) {
+        writeError('Error executing query: ' + err);
+        res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
+      } else {
+        res.status(200).send('{"status":"OK", "message":"Article created"}');
+      }
+    });
   });
 });
 
@@ -319,19 +320,19 @@ function isBase64Image(str) {
   return false;
 }
 
-function getUserId(user) {
+function getUserId(user, callback) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
-  con.query(query, [user], function (err, result) {
-      if (err) {
-        writeError('Error executing query: ' + err);
-      } else {
-        if (result.length > 0) {
-          console.log(result[0].user_id)
-        } else {
-          writeError("Query ERROR")
-        }
-      }
-    });
+  con.query(query, [user], (err, result) => {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      callback(null); // Return null to indicate an error
+    } else if (result.length > 0) {
+      callback(result[0].user_id); // Pass the user_id to the callback
+    } else {
+      writeError("User not found");
+      callback(null); // Return null if no user is found
+    }
+  });
 }
 
 
