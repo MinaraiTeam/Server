@@ -104,7 +104,6 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
     } else {
       if (result.length > 0) {
         res.status(200).send('{"status":"OK", "message":"User login ok", "data":{}')
-        console.log(result[0].name)
       } else {
         res.status(400).send('{"status":"EROR", "message":"Invalid username or password"}')
       }
@@ -347,7 +346,7 @@ async function getUserId(user) {
   const query = "SELECT user_id FROM users WHERE name = ?;";
   try {
     const result = await executeQuery(query, [user]);
-    return result.user_id;
+    return result[0].user_id;
   } catch (err) {
     writeError('Error getting userId:'+ err.message);
   }
