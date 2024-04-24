@@ -253,7 +253,7 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     }
   }
 
-  userId = getUserId(user);
+  userId = await getUserId(user);
 
   var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
   
