@@ -103,8 +103,8 @@ app.post('/api/user/login', upload.single('file'), async (req, res) => {
       res.status(400).send('{"status":"EROR", "message":"Error executing query"}')
     } else {
       if (result.length > 0) {
-        res.status(200).send('{"status":"OK", "message":"User login ok", "data":{$result}')
-        console.log(result)
+        res.status(200).send('{"status":"OK", "message":"User login ok", "data":{}')
+        console.log(result.name)
       } else {
         res.status(400).send('{"status":"EROR", "message":"Invalid username or password"}')
       }
