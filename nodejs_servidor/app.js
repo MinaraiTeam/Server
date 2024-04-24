@@ -46,7 +46,7 @@ const con = mysql.createConnection({
 });
 
 con.connect(function(err) {
-  if (err) throw err;
+  if (err) writeError(err);
   console.log("Connected to MySQL!");
 });
 
@@ -320,14 +320,12 @@ function isBase64Image(str) {
       return true;
   }
 
-  // Check if the string has valid base64 structure and is long enough
   if (str.length > 50 && base64Pattern.test(str)) {
-      // Try to decode the base64 to ensure it's valid
       try {
-          atob(str); // This will throw an error if the base64 string is invalid
+          atob(str); 
           return true;
       } catch (e) {
-          return false; // If decoding fails, it's not a valid base64
+          return false; 
       }
   }
 
