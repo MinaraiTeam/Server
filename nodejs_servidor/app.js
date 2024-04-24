@@ -193,7 +193,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
 });
 
 app.post('/api/article/sumview', upload.single('file'), async (req, res) => {
-  writeLog('MESSAGE article get');
+  writeLog('MESSAGE article sumView');
   const textPost = req.body;
 
   try {
@@ -221,6 +221,56 @@ app.post('/api/article/sumview', upload.single('file'), async (req, res) => {
   });
 });
 
+app.post('/api/article/post', upload.single('file'), async (req, res) => {
+  writeLog('MESSAGE article post');
+  const textPost = req.body;
+
+  try {
+    title = textPost.title;
+    preview_image = textPost.preview_image;
+    content = textPost.content;
+    language = textPost.language;
+    annex = textPost.annex;
+    country = textPost.country;
+    date = textPost.date;
+    user = textPost.user;
+    category = textPost.category;
+  } catch (error) {
+    writeError('JSON error' + error);
+    res.status(400).send('{"status":"ERROR", "message":"Error en el JSON"}');
+    return;
+  }
+
+  previewImage = saveImage(preview_image, uuid());
+
+  savedContent = []
+  for (let i = 0; i < content.length; i++) {
+    if (isBase64Image(content[i])) {
+      savedContent.push(saveImage(content[i], uuid()))
+    } else {
+      savedContent.push(content[i])
+    }
+  }
+
+  userId = await getUserId(user);
+
+  var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
+  
+  params = [title, previewImage, savedContent, language, annex, country, date, userid, category]
+
+  con.query(query, params, function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
+    } else {
+      if (result.length > 0) {
+        res.status(200).send(`{"status":"OK", "message":"Article created"}`);
+      } else {
+        res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
+      }
+    }
+  });
+});
 
 
 ///////////////////
@@ -243,6 +293,7 @@ function saveImage(imageData, imageName) {
         console.error('Error saving image:', err);
     } else {
         console.log('Image saved successfully!');
+        return '/images/' + imageName
     }
   });
 }
@@ -257,6 +308,32 @@ function imageToBase64(filePath) {
   return base64Image;
 }
 
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x'? r : (r & 0x3 | 0x8);
+    return v.toString(16) + '.png';
+  });
+}
+
+function isBase64Image(str) {
+  if (str.startsWith("data:image/")) {
+      return true;
+  }
+
+  // Check if the string has valid base64 structure and is long enough
+  if (str.length > 50 && base64Pattern.test(str)) {
+      // Try to decode the base64 to ensure it's valid
+      try {
+          atob(str); // This will throw an error if the base64 string is invalid
+          return true;
+      } catch (e) {
+          return false; // If decoding fails, it's not a valid base64
+      }
+  }
+
+  return false;
+}
+
 function executeQuery(query, callback) {
   con.query(query, function (err, result, fields) {
     if (err) {
@@ -268,17 +345,18 @@ function executeQuery(query, callback) {
   });
 }
 
-// example
-// function getAllArticles() {
-//   const query = "SELECT * FROM articles";
-//   executeQuery(query, (err, result) => {
-//     if (err) {
-//       writeError('Error getting articles: ' + err.message);
-//     } else {
-//       console.log('Articles:', result);
-//     }
-//   });
-// }
+
+async function getUserId(user) {
+  const query = "SELECT user_id FROM users WHERE name = ?;";
+  try {
+    const result = await executeQuery(query, [user]);
+    return result.user_id;
+  } catch (err) {
+    writeError('Error getting userId:'+ err.message);
+  }
+}
+
+console.log(getUserId('Test Subject'))
 
 ///////////////
 ///  LOGGS  ///
