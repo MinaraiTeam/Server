@@ -242,37 +242,35 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     return;
   }
 
-  // previewImage = saveImage(preview_image, uuid());
+  previewImage = saveImage(preview_image, uuid());
 
-  // savedContent = []
-  // for (let i = 0; i < content.length; i++) {
-  //   if (isBase64Image(content[i])) {
-  //     savedContent.push(saveImage(content[i], uuid()))
-  //   } else {
-  //     savedContent.push(content[i])
-  //   }
-  // }
+  savedContent = []
+  for (let i = 0; i < content.length; i++) {
+    if (isBase64Image(content[i])) {
+      savedContent.push(saveImage(content[i], uuid()))
+    } else {
+      savedContent.push(content[i])
+    }
+  }
 
   userId = await getUserId(user);
 
-  console.log(userId)
-
-  // var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
+  var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, '{\"content\": ? }', ?, ?, ?, ?, 0, ?, ?);"
   
-  // params = [title, previewImage, savedContent, language, annex, country, date, userid, category]
+  params = [title, previewImage, savedContent, language, annex, country, date, userid, category]
 
-  // con.query(query, params, function (err, result) {
-  //   if (err) {
-  //     writeError('Error executing query: ' + err);
-  //     res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
-  //   } else {
-  //     if (result.length > 0) {
-  //       res.status(200).send(`{"status":"OK", "message":"Article created"}`);
-  //     } else {
-  //       res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
-  //     }
-  //   }
-  // });
+  con.query(query, params, function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
+    } else {
+      if (result.length > 0) {
+        res.status(200).send(`{"status":"OK", "message":"Article created"}`);
+      } else {
+        res.status(400).send('{"status":"ERROR", "message":"Something gone wrong"}');
+      }
+    }
+  });
 });
 
 
