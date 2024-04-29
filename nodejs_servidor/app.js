@@ -315,20 +315,11 @@ function uuid() {
 function isBase64Image(str) {
   if (str.startsWith("data:image/")) {
       return true;
-  }
+  } else if (str.length > 50) {
+    return true
+  } 
 
-  base64Pattern = iVBORw0KG;
-
-  if (str.length > 50 && base64Pattern.test(str)) {
-      try {
-          atob(str); 
-          return true;
-      } catch (e) {
-          return false; 
-      }
-  }
-
-  return false;
+  return inputString.startsWith('iVBORw0KG');
 }
 
 function getUserId(user, callback) {
