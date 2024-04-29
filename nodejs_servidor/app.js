@@ -249,11 +249,13 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
   }
 
   previewImage = await saveImage(preview_image, uuid());
+  console.log(previewImage)
 
   savedContent = []
   for (let i = 0; i < content.length; i++) {
     if (isBase64Image(content[i])) {
-      savedContent.push(await saveImage(content[i], uuid()))
+      pathImage = await saveImage(content[i], uuid())
+      savedContent.push(pathImage)
     } else {
       savedContent.push(content[i])
     }
