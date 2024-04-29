@@ -318,6 +318,8 @@ function isBase64Image(str) {
       return true;
   }
 
+  base64Pattern = /^data:image\/(png|jpeg|jpg);base64,/;
+
   if (str.length > 50 && base64Pattern.test(str)) {
       try {
           atob(str); 
