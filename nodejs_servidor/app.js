@@ -312,10 +312,10 @@ function uuid() {
   return uuidv4() + '.png';
 }
 
-function isBase64Image(str) {
-  if (str.startsWith("data:image/")) {
+function isBase64Image(inputString) {
+  if (inputString.startsWith("data:image/")) {
       return true;
-  } else if (str.length > 50) {
+  } else if (inputString.length > 50) {
     return true
   } 
 
