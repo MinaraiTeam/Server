@@ -317,7 +317,7 @@ function isBase64Image(str) {
       return true;
   }
 
-  base64Pattern = "iVBORw0KG";
+  base64Pattern = iVBORw0KG;
 
   if (str.length > 50 && base64Pattern.test(str)) {
       try {
