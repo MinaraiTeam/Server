@@ -248,12 +248,12 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     return;
   }
 
-  previewImage = saveImage(preview_image, uuid());
+  previewImage = await saveImage(preview_image, uuid());
 
   savedContent = []
   for (let i = 0; i < content.length; i++) {
     if (isBase64Image(content[i])) {
-      savedContent.push(saveImage(content[i], uuid()))
+      savedContent.push(await saveImage(content[i], uuid()))
     } else {
       savedContent.push(content[i])
     }
@@ -288,7 +288,7 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
 ///  FUNCTIONS  ///
 ///////////////////
 
-function saveImage(imageData, imageName) {
+async function saveImage(imageData, imageName) {
   const directory = './public/images/'
 
   if (!fs.existsSync(directory)){
