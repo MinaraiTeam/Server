@@ -247,7 +247,6 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     res.status(400).send('{"status":"ERROR", "message":"Error en el JSON"}');
     return;
   }
-  console.log(content)
 
   previewImage = saveImage(preview_image, uuid());
 
@@ -318,7 +317,7 @@ function isBase64Image(str) {
       return true;
   }
 
-  base64Pattern = /^data:image\/(png|jpeg|jpg);base64,/;
+  base64Pattern = "iVBORw0KG";
 
   if (str.length > 50 && base64Pattern.test(str)) {
       try {
