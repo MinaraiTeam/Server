@@ -247,15 +247,19 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     res.status(400).send('{"status":"ERROR", "message":"Error en el JSON"}');
     return;
   }
-
-  previewImage = await saveImage(preview_image, uuid());
-  console.log(previewImage)
+  
+  previewImageName = uuid()
+  previewImagePath = '/images/' + previewImageName
+  saveImage(preview_image, previewImageName);
+  console.log(previewImagePath)
 
   savedContent = []
   for (let i = 0; i < content.length; i++) {
     if (isBase64Image(content[i])) {
-      pathImage = await saveImage(content[i], uuid())
-      savedContent.push(pathImage)
+      imageName = uuid()
+      imagePath = '/images/' + imageName
+      saveImage(content[i], imageName)
+      savedContent.push(imagePath)
     } else {
       savedContent.push(content[i])
     }
@@ -305,7 +309,7 @@ async function saveImage(imageData, imageName) {
     if (err) {
         writeError('Error saving image:', err);
     } else {
-        return '/images/' + imageName
+        return
     }
   });
 }
