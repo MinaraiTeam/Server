@@ -288,6 +288,33 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
   });
 });
 
+app.post('/api/user/name', upload.single('file'), async (req, res) => {
+  writeLog('MESSAGE user name')
+  const textPost = req.body;
+
+  try {
+    userId = textPost.user_id;
+  } catch (error) {
+    writeError('JSON error' + error);
+    res.status(400).send('{"status":"EROR", "message":"Error en el JSON"}')
+  } 
+
+  var query = "SELECT name FROM users WHERE user_id = ?"
+
+  con.query(query, [userId], function (err, result) {
+    if (err) {
+      writeError('Error executing query: ' + err);
+      res.status(400).send('{"status":"EROR", "message":"Error executing query"}')
+    } else {
+      if (result.length > 0) {
+        res.status(200).send(`{"status":"OK", "message":"User founded", "data":${JSON.stringify(result)}}`)
+      } else {
+        res.status(400).send('{"status":"EROR", "message":"Invalid username or password"}')
+      }
+    }
+  });
+
+})
 
 ///////////////////
 ///  FUNCTIONS  ///
