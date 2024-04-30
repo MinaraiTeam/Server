@@ -251,7 +251,6 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
   previewImageName = uuid()
   previewImagePath = '/images/' + previewImageName
   saveImage(preview_image, previewImageName);
-  console.log(previewImagePath)
 
   savedContent = []
   for (let i = 0; i < content.length; i++) {
@@ -273,7 +272,7 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
 
     var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?);"
   
-    const params = [title, previewImage, JSON.stringify({ content: savedContent }),  language, annex, country, date, userId, category];
+    const params = [title, previewImagePath, JSON.stringify({ content: savedContent }),  language, annex, country, date, userId, category];
 
     console.log(query)
     console.log(params)
