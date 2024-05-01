@@ -170,7 +170,7 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
   query += orderByClause;
 
 
-  if (amount < 0) {
+  if (amount > 0) {
     query += " LIMIT ?";
     uses.push(amount);
   }
