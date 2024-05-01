@@ -175,6 +175,9 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
     uses.push(amount);
   }
 
+  console.log(query)
+  console.log(uses)
+
   con.query(query, uses, function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
