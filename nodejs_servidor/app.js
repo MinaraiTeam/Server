@@ -164,9 +164,9 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
     }
   }
 
-  var orderByClause = ' ORDER BY ? ?';
-  uses.push(orderBy);
-  uses.push(order);
+  var orderByClause = ` ORDER BY ${orderBy} ${order}`;
+  //uses.push(orderBy);
+  //uses.push(order);
   query += orderByClause;
 
 
