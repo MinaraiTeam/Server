@@ -165,8 +165,6 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
   }
 
   var orderByClause = ` ORDER BY ${orderBy} ${order}`;
-  //uses.push(orderBy);
-  //uses.push(order);
   query += orderByClause;
 
 
@@ -175,16 +173,12 @@ app.post('/api/article/list', upload.single('file'), async (req, res) => {
     uses.push(amount);
   }
 
-  console.log(query)
-  console.log(uses)
-
   con.query(query, uses, function (err, result) {
     if (err) {
       writeError('Error executing query: ' + err);
       res.status(400).send('{"status":"ERROR", "message":"Error executing query"}');
     } else {
       if (result.length > 0) {
-        console.log(JSON.stringify(result))
         res.status(200).send(`{"status":"OK", "message":"Query ok", "data":${JSON.stringify(result)}}`);
       } else {
         if (err === null) {
@@ -277,9 +271,6 @@ app.post('/api/article/post', upload.single('file'), async (req, res) => {
     var query = "INSERT INTO articles (title, preview_image, content, language, annex, country, date, views, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?);"
   
     const params = [title, previewImagePath, JSON.stringify({ content: savedContent }),  language, annex, country, date, userId, category];
-
-    console.log(query)
-    console.log(params)
     
     con.query(query, params, (err, result) => {
       if (err) {
