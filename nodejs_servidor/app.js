@@ -342,9 +342,10 @@ function uuid() {
 function isBase64Image(inputString) {
   if (inputString.startsWith("data:image/")) {
       return true;
-  } else if (inputString.length > 50) {
-    return true
   } 
+  // else if (inputString.length > 50) {
+  //  return true
+  //} 
 
   return inputString.startsWith('iVBORw0KG');
 }
