@@ -77,6 +77,7 @@ Endpoints related to articles
         }
      ```
 
+See more: [Enpoints](https://docs.google.com/document/d/1STAdDFxns-WFSVP0XbacofT2RT7v9hUEJv-h5sNsNZo/edit?usp=sharing)
 
 
 ## Instalation and running
